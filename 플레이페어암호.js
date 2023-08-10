@@ -28,8 +28,8 @@ let check = {
 };
 let hash = {};
 function solution(input) {
-  let word = input[0];
-  let key = input[1];
+  let word = input[0].trim();
+  let key = input[1].trim();
   let keyLen = key.length;
   let keyIdx = 0;
   let result = [];
@@ -39,13 +39,9 @@ function solution(input) {
       while (check[key[keyIdx]] === 1 && keyIdx < keyLen) {
         keyIdx += 1;
       }
-      if (key[keyIdx] === "J") {
-        board[i][k] = key[keyIdx];
-        check["I"] = 1;
-      } else {
-        board[i][k] = key[keyIdx];
-        check[key[keyIdx]] = 1;
-      }
+
+      board[i][k] = key[keyIdx];
+      check[key[keyIdx]] = 1;
     }
   }
 
@@ -61,8 +57,11 @@ function solution(input) {
       }
     }
   }
-  let stack = [];
   let arr = [];
+  let idx = 0;
+  let stack = [];
+  //   let word = "";
+
   for (var i = 0; i < word.length; i++) {
     stack.push(word[i]);
     if (stack.length === 2) {
@@ -84,32 +83,33 @@ function solution(input) {
       }
     }
   }
+  // yyxxx
+  // yx yx xq xx
   if (stack.length) {
-    if (stack[0].length === 1) {
-      arr.push(stack[0] + "X");
-    } else {
-      arr.push(stack[0]);
-    }
+    arr.push(stack[0] + "X");
   }
+  //   console.log(arr);
+  //   console.log(arr);
+  //   console.log(board);
+
   for (var q = 0; q < 5; q++) {
     for (var w = 0; w < 5; w++) {
       hash[board[q][w]] = [q, w];
     }
   }
-
   arr.forEach((data, idx) => {
     let [x, y] = data.split("");
     let [x1, y1] = hash[x];
     let [x2, y2] = hash[y];
-    if (y1 === y2) {
-      x1 + 1 > 4 ? (x1 = 0) : x1++;
-      x2 + 1 > 4 ? (x2 = 0) : x2++;
+    if (x1 === x2) {
+      y1 === 4 ? (y1 = 0) : y1++;
+      y2 === 4 ? (y2 = 0) : y2++;
       let str2 = board[x1][y1] + board[x2][y2];
 
       result.push(str2);
-    } else if (x1 === x2) {
-      y1 + 1 > 4 ? (y1 = 0) : y1++;
-      y2 + 1 > 4 ? (y2 = 0) : y2++;
+    } else if (y1 === y2 && x1 !== x2) {
+      x1 === 4 ? (x1 = 0) : x1++;
+      x2 === 4 ? (x2 = 0) : x2++;
       let str2 = board[x1][y1] + board[x2][y2];
 
       result.push(str2);
@@ -118,7 +118,7 @@ function solution(input) {
       result.push(str2);
     }
   });
-  console.log(result.join(""));
+  console.log(result.join("").trim());
 }
 
 solution(inputs);
