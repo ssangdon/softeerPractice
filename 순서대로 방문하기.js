@@ -47,6 +47,5 @@ function solution(inputs) {
   };
 
   back(s11, s22, 0);
-  console.log(count);
 }
 solution(input);
