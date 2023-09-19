@@ -24,6 +24,5 @@ function solution(input) {
       limit = 0;
     }
   }
-  console.log(sum);
 }
 solution(inputs);
