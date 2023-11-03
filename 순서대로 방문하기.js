@@ -1,43 +1,40 @@
 let input = require("fs").readFileSync("a.txt").toString().trim().split("\n");
 function solution(inputs) {
-  let [n, m] = inputs[0].split(" ").map(d => parseInt(d));
-  let count = 0;
-  let board = [];
+  let [n, m] = inputs[0].split(" ").map(d => +d);
+  let course = [];
   for (var i = 1; i < 1 + n; i++) {
-    let arr = inputs[i].split(" ").map(d => parseInt(d));
-    board.push(arr);
+    course.push(inputs[i].split(" ").map(d => +d));
   }
+  let visited = Array.from(Array(n), () => Array(n).fill(0));
   let needVisit = [];
+  for (var k = 1 + n; k < 1 + n + m; k++) {
+    needVisit.push(inputs[k].split(" ").map(d => +d - 1));
+  }
+  let count = 0;
   let dx = [-1, 1, 0, 0];
   let dy = [0, 0, -1, 1];
-  let visited = Array.from(Array(n), () => Array(n).fill(0));
-  for (var k = 1 + n; k < 1 + n + m; k++) {
-    let splited = inputs[k].split(" ").map(d => parseInt(d) - 1);
-    needVisit.push(splited);
-  }
-  let [s11, s22] = needVisit[0];
+  let [s1, s2] = needVisit[0];
   const back = (s1, s2, idx) => {
-    let [e1, e2] = needVisit[idx + 1];
+    let [n1, n2] = needVisit[idx + 1];
     visited[s1][s2] = 1;
-    if (idx === needVisit.length - 2) {
-      if (s1 === e1 && s2 === e2) {
+    if (s1 === n1 && s2 === n2) {
+      if (idx === m - 2) {
         count++;
         return;
+      } else {
+        back(n1, n2, idx + 1);
       }
-    } else if (s1 === e1 && s2 === e2) {
-      back(s1, s2, idx + 1);
     }
-
-    for (var i = 0; i < 4; i++) {
-      let lx = s1 + dx[i];
-      let ly = s2 + dy[i];
+    for (var k = 0; k < 4; k++) {
+      let lx = s1 + dx[k];
+      let ly = s2 + dy[k];
       if (
         lx >= 0 &&
-        lx < n &&
         ly >= 0 &&
+        lx < n &&
         ly < n &&
-        visited[lx][ly] !== 1 &&
-        board[lx][ly] !== 1
+        course[lx][ly] === 0 &&
+        visited[lx][ly] === 0
       ) {
         visited[lx][ly] = 1;
         back(lx, ly, idx);
@@ -45,7 +42,7 @@ function solution(inputs) {
       }
     }
   };
-
-  back(s11, s22, 0);
+  back(s1, s2, 0);
+  console.log(count);
 }
 solution(input);
